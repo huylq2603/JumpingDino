@@ -7,8 +7,8 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D rb;
     private Transform tf;
 
-    public int jumpForce;
-    public int speed;
+    public float jumpForce;
+    public float speed;
     private float moveInput;
 
     private bool isGrounded;
@@ -16,49 +16,66 @@ public class PlayerController : MonoBehaviour
     public float checkRadius;
     public LayerMask whatIsGround;
 
-    private float jumpTimeCounter;
-    public float jumpTime;
-    private bool isJumping;
+    public GameObject interactableObject;
 
     void Start() {
         rb = GetComponent<Rigidbody2D>();
         tf = GetComponent<Transform>();
+        interactableObject = null;
     }
 
     private void FixedUpdate() {
+        //move
         moveInput = Input.GetAxisRaw("Horizontal");
         rb.velocity = new Vector2(moveInput * speed, rb.velocity.y);
+
+        //change sprite direction
         if (moveInput > 0) {
-            tf.localScale = new Vector2(1.2f, tf.localScale.y);
+            tf.localScale = new Vector2(1, tf.localScale.y);
         }
         if (moveInput < 0) {
-            tf.localScale = new Vector2(-1.2f, tf.localScale.y);
+            tf.localScale = new Vector2(-1, tf.localScale.y);
         }
     }
     
     // Update is called once per frame
     void Update()
     {
-        
+        //check ground
         isGrounded = Physics2D.OverlapCircle(feetPos.position, checkRadius, whatIsGround);
 
+        //jump
         if (isGrounded && Input.GetKeyDown(KeyCode.Space)) {
-            isJumping = true;
-            jumpTimeCounter = jumpTime;
             rb.velocity = Vector2.up * jumpForce;
         }
 
-        if (Input.GetKey(KeyCode.Space) && isJumping) {
-            if (jumpTimeCounter > 0) {
-                rb.velocity = Vector2.up * jumpForce;
-                jumpTimeCounter -= Time.deltaTime;
-            } else {
-                isJumping = false;
-            }
+        if (interactableObject != null && Input.GetKeyDown(KeyCode.F)) {
+            interactableObject.GetComponent<Animator>().Play("DoorAnim");
         }
+    }
 
-        if (Input.GetKeyUp(KeyCode.Space)) {
-            isJumping = false;
+    private void OnTriggerEnter2D(Collider2D other) {
+        switch (other.gameObject.tag)
+        {
+            case "Edibles": 
+                Destroy(other.gameObject);
+                break;
+            case "Interactables":
+                interactableObject = other.gameObject;
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D other) {
+        switch (other.gameObject.tag)
+        {
+            case "Interactables":
+                interactableObject = null;
+                break;
+            default:
+                break;
         }
     }
 }

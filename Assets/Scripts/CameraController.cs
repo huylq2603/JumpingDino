@@ -7,9 +7,11 @@ public class CameraController : MonoBehaviour
 
     public Rigidbody2D player;
 
+    public float offSetY;
+
     // Update is called once per frame
     void Update()
     {
-        transform.position = new Vector3(player.transform.position.x, player.transform.position.y, transform.position.z);
+        transform.position = new Vector3(player.transform.position.x, player.transform.position.y + offSetY, transform.position.z);
     }
 }

@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - Ground
+  - Edibles
+  - Interactables
   layers:
   - Default
   - TransparentFX
@@ -42,8 +44,11 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Ground
+  - name: Background
     uniqueID: 3238848959
+    locked: 0
+  - name: Foreground
+    uniqueID: 3542682613
     locked: 0
   - name: Entity
     uniqueID: 2220886185
