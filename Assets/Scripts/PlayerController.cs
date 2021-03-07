@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour
     public float checkRadius;
     public LayerMask whatIsGround;
 
-    public GameObject interactableObject;
+    private GameObject interactableObject;
 
     void Start() {
         rb = GetComponent<Rigidbody2D>();
@@ -50,7 +50,8 @@ public class PlayerController : MonoBehaviour
         }
 
         if (interactableObject != null && Input.GetKeyDown(KeyCode.F)) {
-            interactableObject.GetComponent<Animator>().Play("DoorAnim");
+            interactableObject.GetComponent<Animator>().Play("InteractableAnim");
+            interactableObject.GetComponent<InteractableAlert>().DestroyGuideText();
         }
     }
 

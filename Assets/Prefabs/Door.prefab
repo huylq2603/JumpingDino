@@ -12,8 +12,9 @@ GameObject:
   - component: {fileID: 5247359115333178563}
   - component: {fileID: 5247359115333178565}
   - component: {fileID: 5247359115333178566}
+  - component: {fileID: 1071494083}
   m_Layer: 0
-  m_Name: door-Sheet_0
+  m_Name: Door
   m_TagString: Interactables
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -69,8 +70,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -2074081111
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: 3025933663623405401, guid: 28b5f6eb1bfbe1f4cbcd6eece09987e5,
     type: 3}
@@ -129,3 +130,18 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &1071494083
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5247359115333178562}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cadca38f70f0fb48b2471fc9ddee037, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  FloatingTextPrefab: {fileID: 6492320147944085138, guid: d972e60fb4d02a4428289b41cb227c6f,
+    type: 3}
+  offsetY: 0.3
