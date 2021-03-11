@@ -100,6 +100,11 @@ MonoBehaviour:
   FloatingTextPrefab: {fileID: 6492320147944085138, guid: d972e60fb4d02a4428289b41cb227c6f,
     type: 3}
   offsetY: 0.15
+  canInteract: 0
+  isNoCarrotRelated: 0
+  interactableType: 1
+  cam: {fileID: 0}
+  camTransform: {fileID: 0}
 --- !u!61 &7807884560288796454
 BoxCollider2D:
   m_ObjectHideFlags: 0

@@ -6,6 +6,7 @@ public class PlayerController : MonoBehaviour
 {
     private Rigidbody2D rb;
     private Transform tf;
+    public Animator animator;
 
     public float jumpForce;
     public float speed;
@@ -18,6 +19,8 @@ public class PlayerController : MonoBehaviour
 
     private GameObject interactableObject;
 
+    private bool check = false;
+
     void Start() {
         rb = GetComponent<Rigidbody2D>();
         tf = GetComponent<Transform>();
@@ -26,15 +29,17 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate() {
         //move
-        moveInput = Input.GetAxisRaw("Horizontal");
-        rb.velocity = new Vector2(moveInput * speed, rb.velocity.y);
-
-        //change sprite direction
-        if (moveInput > 0) {
-            tf.localScale = new Vector2(1, tf.localScale.y);
-        }
-        if (moveInput < 0) {
-            tf.localScale = new Vector2(-1, tf.localScale.y);
+        if (GameController.isInputEnable) {
+            moveInput = Input.GetAxisRaw("Horizontal");
+            rb.velocity = new Vector2(moveInput * speed, rb.velocity.y);
+            animator.SetFloat("speed", Mathf.Abs(moveInput * speed));
+            //change sprite direction
+            if (moveInput > 0) {
+                tf.localScale = new Vector2(1, tf.localScale.y);
+            }
+            if (moveInput < 0) {
+                tf.localScale = new Vector2(-1, tf.localScale.y);
+            }
         }
     }
     
@@ -45,13 +50,27 @@ public class PlayerController : MonoBehaviour
         isGrounded = Physics2D.OverlapCircle(feetPos.position, checkRadius, whatIsGround);
 
         //jump
-        if (isGrounded && Input.GetKeyDown(KeyCode.Space)) {
+        if (rb.velocity.y < 0) {
+            check = true;
+        }
+        if (check) {
+            if (rb.velocity.y == 0) {
+                animator.SetBool("isJumping", false);
+                check = false;
+            }
+        }
+        if (GameController.isInputEnable && isGrounded && Input.GetKeyDown(KeyCode.Space)) {
             rb.velocity = Vector2.up * jumpForce;
+            animator.SetBool("isJumping", true);
         }
 
-        if (interactableObject != null && Input.GetKeyDown(KeyCode.F)) {
-            interactableObject.GetComponent<Animator>().Play("InteractableAnim");
-            interactableObject.GetComponent<InteractableAlert>().DestroyGuideText();
+        if (interactableObject != null) {
+            InteractableAlert scriptInstance = interactableObject.GetComponent<InteractableAlert>();
+            if (GameController.isInputEnable && scriptInstance.canInteract && Input.GetKeyDown(KeyCode.F)) {
+                interactableObject.GetComponent<Animator>().Play("InteractableAnim");
+                scriptInstance.DestroyGuideText();
+                StartCoroutine(scriptInstance.DoInteraction());
+            }
         }
     }
 
@@ -60,6 +79,7 @@ public class PlayerController : MonoBehaviour
         {
             case "Edibles": 
                 Destroy(other.gameObject);
+                GameController.Instance.decreaseCarrot();
                 break;
             case "Interactables":
                 interactableObject = other.gameObject;

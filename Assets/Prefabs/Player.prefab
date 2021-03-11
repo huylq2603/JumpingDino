@@ -74,7 +74,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -2074081111
   m_SortingLayer: 3
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: -4661718479358534311, guid: 8665f71f61a255e4882a9f4f5550b6b3,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -146,6 +146,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adbdb65acb58fdf4ba5ea59167e4cc89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animator: {fileID: 9069913109910535731}
   jumpForce: 14.75
   speed: 8
   feetPos: {fileID: 9069913109915824142}
