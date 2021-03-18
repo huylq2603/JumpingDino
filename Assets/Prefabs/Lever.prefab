@@ -103,8 +103,6 @@ MonoBehaviour:
   canInteract: 0
   isNoCarrotRelated: 0
   interactableType: 1
-  cam: {fileID: 0}
-  camTransform: {fileID: 0}
 --- !u!61 &7807884560288796454
 BoxCollider2D:
   m_ObjectHideFlags: 0

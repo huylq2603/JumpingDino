@@ -148,5 +148,3 @@ MonoBehaviour:
   canInteract: 0
   isNoCarrotRelated: 1
   interactableType: 0
-  cam: {fileID: 0}
-  camTransform: {fileID: 0}

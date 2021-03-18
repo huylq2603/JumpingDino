@@ -17,21 +17,39 @@ public class PlayerController : MonoBehaviour
     public float checkRadius;
     public LayerMask whatIsGround;
 
+    public ParticleSystem dustMove;
+
     private GameObject interactableObject;
 
     private bool check = false;
+    private bool isKnockbacked = false;
+
+    private int playerLayer, groundLayer;
+    public Collider2D groundCollider;
 
     void Start() {
         rb = GetComponent<Rigidbody2D>();
         tf = GetComponent<Transform>();
         interactableObject = null;
+        playerLayer = LayerMask.NameToLayer("Player");
+        groundLayer = LayerMask.NameToLayer("Ground");
     }
+    private bool freezeAction = false;
 
     private void FixedUpdate() {
         //move
         if (GameController.isInputEnable) {
             moveInput = Input.GetAxisRaw("Horizontal");
-            rb.velocity = new Vector2(moveInput * speed, rb.velocity.y);
+            //knockback and move was conflicting so we need to put movement in conditions
+            if (isKnockbacked) {
+                rb.AddForce(new Vector2(tf.localScale.x * -15, 10), ForceMode2D.Impulse);
+                StartCoroutine(HitObstacles());
+                isKnockbacked = false;
+            }
+            if(!freezeAction){
+                rb.velocity = new Vector2(moveInput * speed, rb.velocity.y);
+            }
+            //------------
             animator.SetFloat("speed", Mathf.Abs(moveInput * speed));
             //change sprite direction
             if (moveInput > 0) {
@@ -42,26 +60,35 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-    
+
     // Update is called once per frame
     void Update()
     {
         //check ground
-        isGrounded = Physics2D.OverlapCircle(feetPos.position, checkRadius, whatIsGround);
+        // isGrounded = Physics2D.OverlapCircle(feetPos.position, checkRadius, whatIsGround);
+        isGrounded = Physics2D.OverlapBox(feetPos.position, new Vector2(1.4f, checkRadius), 0, whatIsGround);
 
         //jump
         if (rb.velocity.y < 0) {
             check = true;
         }
         if (check) {
-            if (rb.velocity.y == 0) {
+            if (isGrounded) {
                 animator.SetBool("isJumping", false);
                 check = false;
+                DustMove();
             }
         }
         if (GameController.isInputEnable && isGrounded && Input.GetKeyDown(KeyCode.Space)) {
-            rb.velocity = Vector2.up * jumpForce;
-            animator.SetBool("isJumping", true);
+            if (Input.GetKey(KeyCode.DownArrow)) {
+                if (isGrounded && tf.position.y >= -4.5f) {
+                    StartCoroutine(JumpOff());
+                }
+            } else {
+                rb.velocity = Vector2.up * jumpForce;
+                animator.SetBool("isJumping", true);
+                DustMove();
+            } 
         }
 
         if (interactableObject != null) {
@@ -84,6 +111,12 @@ public class PlayerController : MonoBehaviour
             case "Interactables":
                 interactableObject = other.gameObject;
                 break;
+            case "Obstacles":
+                if (!freezeAction) {
+                    isKnockbacked = true;
+                    freezeAction = true;
+                }
+                break;
             default:
                 break;
         }
@@ -98,6 +131,32 @@ public class PlayerController : MonoBehaviour
             default:
                 break;
         }
+    }
+
+    private IEnumerator HitObstacles() {
+        Renderer rd = GetComponent<Renderer>();
+        rd.enabled = false;
+        yield return new WaitForSeconds(0.1f);
+        rd.enabled = true;
+        yield return new WaitForSeconds(0.1f);
+        rd.enabled = false;
+        yield return new WaitForSeconds(0.1f);
+        rd.enabled = true;
+        yield return new WaitForSeconds(0.1f);
+        rd.enabled = false;
+        yield return new WaitForSeconds(0.1f);
+        rd.enabled = true;
+        freezeAction = false;
+    }
+
+    private IEnumerator JumpOff() {
+        GetComponent<Collider2D>().enabled = false;
+        yield return new WaitForSeconds(0.2f);
+        GetComponent<Collider2D>().enabled = true;
+    }
+    
+    private void DustMove(){
+        dustMove.Play();
     }
 }
 
