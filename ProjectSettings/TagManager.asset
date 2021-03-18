@@ -7,6 +7,8 @@ TagManager:
   - Ground
   - Edibles
   - Interactables
+  - TempPlatform
+  - Obstacles
   layers:
   - Default
   - TransparentFX
@@ -17,7 +19,7 @@ TagManager:
   - 
   - 
   - Ground
-  - 
+  - Player
   - 
   - 
   - 
